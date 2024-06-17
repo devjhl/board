@@ -29,6 +29,8 @@ public class Board {
 
     private LocalDateTime createDate;
 
+    private int count;
+
     @PrePersist
     public void createDate() {
         this.createDate = LocalDateTime.now();
