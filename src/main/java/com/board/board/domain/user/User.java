@@ -1,4 +1,4 @@
-package com.board.board.domain;
+package com.board.board.domain.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
