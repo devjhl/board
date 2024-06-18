@@ -1,6 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -42,29 +41,25 @@
         </tr>
         </thead>
         <tbody>
-        <c:forEach var="board" items="${boardList}">
-            <tr>
-                <td>${board.id}</td>
-                <td><a href="#">${board.title}</a></td>
-                <td>${board.user.username}</td>
-                <td>${board.createDate}</td>
-                <td>${board.count}</td>
-            </tr>
-        </c:forEach>
+        <tr th:each="board : ${boardList}">
+            <td th:text="${board.id}"></td>
+            <td><a th:text="${board.title}" th:href="@{'/boards/' + ${board.id}}"></a></td>
+            <td th:text="${board.user.username}"></td>
+            <td th:text="${board.createDate}"></td>
+            <td th:text="${board.count}"></td>
+        </tr>
         </tbody>
     </table>
     <div class="text-right mb-3">
-        <button class="btn btn-success">글쓰기</button>
+        <button class="btn btn-success" onclick="window.location.href='/boards/write'">글쓰기</button>
     </div>
-    <nav>
+    <!--<nav>
         <ul class="pagination">
             <li class="page-item"><a class="page-link" href="#">이전</a></li>
-            <c:forEach var="i" begin="1" end="${totalPages}">
-                <li class="page-item"><a class="page-link" href="#">${i}</a></li>
-            </c:forEach>
+            <li th:each="i : ${#numbers.sequence(1, totalPages)}" class="page-item"><a class="page-link" th:text="${i}" th:href="@{'?page=' + ${i}}"></a></li>
             <li class="page-item"><a class="page-link" href="#">다음</a></li>
         </ul>
-    </nav>
+    </nav>-->
 </div>
 
 <!-- Bootstrap JS, Popper.js, and jQuery -->

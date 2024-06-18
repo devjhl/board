@@ -1,8 +1,13 @@
 package com.board.board.service;
 
-import org.springframework.stereotype.Service;
+import com.board.board.domain.user.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService {
+import java.util.Optional;
 
+public interface UserService extends UserDetailsService {
 
+    User registerUser(User user);
+
+    Optional<User> findByUsername(String username);
 }
