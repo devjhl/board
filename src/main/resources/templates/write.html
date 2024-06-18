@@ -18,14 +18,14 @@
 <body>
 <div class="container">
     <h1 class="mb-4">글 작성</h1>
-    <form>
+    <form method="post" action="/boards/write">
         <div class="form-group">
             <label for="title">제목</label>
-            <input type="text" class="form-control" id="title" placeholder="제목을 입력하세요" required>
+            <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력하세요" required>
         </div>
         <div class="form-group">
             <label for="content">내용</label>
-            <textarea class="form-control" id="content" rows="10" placeholder="내용을 입력하세요" required></textarea>
+            <textarea class="form-control" id="content" name="content" rows="10" placeholder="내용을 입력하세요" required></textarea>
         </div>
         <button type="submit" class="btn btn-primary btn-submit">작성하기</button>
     </form>

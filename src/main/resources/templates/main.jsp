@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,21 +42,15 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>1</td>
-            <td><a href="#">게시글 제목1</a></td>
-            <td>작성자1</td>
-            <td>2024-06-17</td>
-            <td>100</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td><a href="#">게시글 제목2</a></td>
-            <td>작성자2</td>
-            <td>2024-06-16</td>
-            <td>150</td>
-        </tr>
-        <!-- 더 많은 행 추가 가능 -->
+        <c:forEach var="board" items="${boardList}">
+            <tr>
+                <td>${board.id}</td>
+                <td><a href="#">${board.title}</a></td>
+                <td>${board.user.username}</td>
+                <td>${board.createDate}</td>
+                <td>${board.count}</td>
+            </tr>
+        </c:forEach>
         </tbody>
     </table>
     <div class="text-right mb-3">
@@ -64,9 +59,9 @@
     <nav>
         <ul class="pagination">
             <li class="page-item"><a class="page-link" href="#">이전</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <c:forEach var="i" begin="1" end="${totalPages}">
+                <li class="page-item"><a class="page-link" href="#">${i}</a></li>
+            </c:forEach>
             <li class="page-item"><a class="page-link" href="#">다음</a></li>
         </ul>
     </nav>
