@@ -31,7 +31,7 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public boolean updateBoard(Board board) {
+    public boolean updateBoard(Long id, Board board) {
         if(boardRepository.existsById(board.getId())) {
             boardRepository.save(board);
             return true;

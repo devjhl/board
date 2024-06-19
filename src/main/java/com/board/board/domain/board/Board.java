@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Entity
+@ToString(exclude = "user")
+@EqualsAndHashCode(exclude = "user")
 public class Board {
 
     @Id
@@ -23,17 +25,17 @@ public class Board {
     @Column(nullable = false)
     private String content;
 
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
+    @Column(updatable = false)
     private LocalDateTime createDate;
 
     private int count;
 
     @PrePersist
-    public void createDate() {
+    public void prePersist() {
         this.createDate = LocalDateTime.now();
     }
-
 }

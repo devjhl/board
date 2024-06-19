@@ -4,11 +4,12 @@ import com.board.board.domain.board.Board;
 import com.board.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,11 +21,14 @@ public class BoardController {
 
     private final BoardService boardService;
 
+
+
     // 전체 글 목록 조회
     @GetMapping
-    public String getBoards(Model model) {
+    public String getBoards(Model model,@AuthenticationPrincipal UserDetails userDetails) {
         List<Board> boardList = boardService.getBoards();
         model.addAttribute("boardList", boardList);
+        //model.addAttribute("loginUser", userDetails.getUsername());
         return "boards";
     }
 
@@ -52,13 +56,13 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-//    // 글 수정
-//    @PutMapping("/{id}")
-//    @ResponseBody
-//    public ResponseEntity<Board> updateBoard(@PathVariable Long id, @RequestBody Board board) {
-//        boardService.updateBoard(id, board);
-//        return ResponseEntity.ok(board);
-//    }
+    // 글 수정
+    @PutMapping("/{id}")
+    @ResponseBody
+    public ResponseEntity<Board> updateBoard(@PathVariable Long id, @RequestBody Board board) {
+        boardService.updateBoard(id, board);
+        return ResponseEntity.ok(board);
+    }
 
     // 글 삭제
     @DeleteMapping("/{id}")
