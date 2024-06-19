@@ -1,6 +1,5 @@
 package com.board.board.service;
 
-import com.board.board.CustomUserDetails;
 import com.board.board.domain.user.User;
 import com.board.board.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,12 +17,12 @@ public class CustomUserDetailsService implements org.springframework.security.co
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<CustomUserDetails> userOptional = userRepository.findByUsername(username);
+        Optional<User> userOptional = userRepository.findByUsername(username);
         if (!userOptional.isPresent()) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
 
-        CustomUserDetails customUserDetails = userOptional.get();
+        User customUserDetails = userOptional.get();
         return new org.springframework.security.core.userdetails.User(
                 customUserDetails.getUsername(),
                 customUserDetails.getPassword(),

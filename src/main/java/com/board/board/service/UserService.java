@@ -1,6 +1,6 @@
 package com.board.board.service;
 
-import com.board.board.CustomUserDetails;
+import com.board.board.domain.user.User;
 import com.board.board.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,11 +31,11 @@ public class UserService implements UserDetailsManager {
         }
 
         try {
-            CustomUserDetails customUserDetails = CustomUserDetails.builder()
+            User customUserDetails = User.builder()
                     .username(user.getUsername())
                     .password(passwordEncoder.encode(user.getPassword()))
-                    .email(((CustomUserDetails) user).getEmail())
-                    .nickname(((CustomUserDetails) user).getNickname())
+                    .email(((User) user).getEmail())
+                    .nickname(((User) user).getNickname())
                     .build();
             userRepository.save(customUserDetails);
         } catch (ClassCastException e) {
@@ -65,12 +65,12 @@ public class UserService implements UserDetailsManager {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<CustomUserDetails> userOptional = userRepository.findByUsername(username);
+        Optional<User> userOptional = userRepository.findByUsername(username);
         if (!userOptional.isPresent()) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
 
-        CustomUserDetails user = userOptional.get();
+        User user = userOptional.get();
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),

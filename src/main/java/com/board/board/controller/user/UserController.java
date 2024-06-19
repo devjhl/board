@@ -1,6 +1,7 @@
 package com.board.board.controller.user;
 
-import com.board.board.CustomUserDetails;
+import com.board.board.domain.user.User;
+import com.board.board.domain.user.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -34,12 +35,18 @@ public class UserController {
             @RequestParam("password") String password,
             @RequestParam("email") String email,
             @RequestParam("nickname") String nickname) {
-        userDetailsManager.createUser(CustomUserDetails.builder()
+
+        User user = User.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .email(email)
                 .nickname(nickname)
-                .build());
+                .role(Role.USER) // 기본값으로 ROLE_USER 설정
+                .build();
+
+        System.out.println("User details: " + user);
+
+        userDetailsManager.createUser(user);
         return "redirect:/users";
     }
 }

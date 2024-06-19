@@ -24,7 +24,7 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false, unique = true)
     private String nickname;
 
     @Column(nullable = false)
@@ -33,52 +33,57 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role; // Role 필드 추가
+
     @Builder
-    public User(String username, String password, String nickname, String email) {
+    public User(String username, String password, String nickname, String email, Role role) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.email = email;
+        this.role = role != null ? role : Role.USER;
     }
 
-    private boolean enabled = true; // 활성화 필드 추가
+    private boolean enabled = true;
 
     public User() {
-
+        this.role = Role.USER;
     }
 
-    @Override //권한 반환
+    @Override // 권한 반환
     public Collection<? extends GrantedAuthority> getAuthorities(){
-        return List.of(new SimpleGrantedAuthority("user"));
+        return List.of(new SimpleGrantedAuthority(role.getRole()));
     }
 
-    //사용자의 id를 반환(고유한 값)
+    // 사용자의 id를 반환(고유한 값)
     @Override
     public String getUsername(){
         return username;
     }
-    //사용자 패스워드 반환
+    // 사용자 패스워드 반환
     @Override
     public String getPassword(){
         return password;
     }
 
-    //계정 만료 여부 반환
+    // 계정 만료 여부 반환
     @Override
     public boolean isAccountNonExpired(){
         return true;
     }
-    //계정 잠금 여부 반환
+    // 계정 잠금 여부 반환
     @Override
     public boolean isAccountNonLocked(){
         return true;
     }
-    //패스워드 만료 여부 반환
+    // 패스워드 만료 여부 반환
     @Override
     public boolean isCredentialsNonExpired(){
         return true;
     }
-    //계정 사용 가능 여부 반환
+    // 계정 사용 가능 여부 반환
     @Override
     public boolean isEnabled(){
         return true;

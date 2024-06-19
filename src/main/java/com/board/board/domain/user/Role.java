@@ -1,13 +1,15 @@
 package com.board.board.domain.user;
-
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-@Getter
-@RequiredArgsConstructor
 public enum Role {
-    USER("ROLE_USER"),
-    ADMIN("ROLE_ADMIN");
+    USER("USER"),
+    ADMIN("ADMIN");
 
     private final String role;
+
+    Role(String role) {
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
+    }
 }
