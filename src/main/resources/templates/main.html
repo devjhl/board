@@ -10,6 +10,8 @@
     <h2>로그인한 사용자 정보</h2>
     <p><span th:text="${user.username}"></span>님 안녕하세요</p>
 </div>
-
+    <form action="/logout" method="post">
+        <button>로그아웃</button>
+    </form>
 </body>
 </html>
