@@ -1,5 +1,6 @@
 package com.board.board.controller.Auth;
 
+import com.board.board.domain.user.User;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -12,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MainController {
 
     @GetMapping
-    public String main(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        model.addAttribute("user", userDetails);
+    public String main(@AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("user", user);
         return "main";
     }
 }

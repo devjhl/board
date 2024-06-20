@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
-@Service("customUserDetailsService")
+@Service("UserDetailsService")
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     private final UserRepository userRepository;
@@ -18,4 +18,6 @@ public class UserDetailsService implements org.springframework.security.core.use
             return userRepository.findByUsername(username)
                     .orElseThrow(() -> new UsernameNotFoundException(username));
     }
+
+
 }

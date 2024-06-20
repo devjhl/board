@@ -45,8 +45,8 @@
         <tr th:each="board : ${boardList}">
             <td th:text="${board.id}"></td>
             <td><a th:text="${board.title}" th:href="@{'/boards/' + ${board.id}}"></a></td>
-          <!--  <td th:text="${board.user.username}"></td>-->
-            <td th:text="${board.createDate}"></td>
+            <td th:text="${board.user.username}"></td>
+            <td th:text="${#dates.format(board.createDate, 'yyyy-MM-dd')}"></td>
             <td th:text="${board.count}"></td>
         </tr>
         </tbody>
