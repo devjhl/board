@@ -2,15 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 정보</title>
 </head>
 <body>
-<h1>My Profile</h1>
 <div>
-    <a>[[${username}]] 님 안녕하세요</a>
+    <h2>로그인한 사용자 정보</h2>
+    <p><span th:text="${user.username}"></span>님 안녕하세요</p>
 </div>
-<form action="/users/logout" method="post">
-    <input type="submit" value="로그아웃">
-</form>
+
 </body>
 </html>

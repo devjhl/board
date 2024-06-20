@@ -1,52 +1,45 @@
 package com.board.board.controller.user;
 
-import com.board.board.domain.user.User;
 import com.board.board.domain.user.Role;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import com.board.board.domain.user.User;
+import com.board.board.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.io.IOException;
+
+
+@RestController
 @RequestMapping("/users")
-@RequiredArgsConstructor
 public class UserController {
 
-    private final UserDetailsManager userDetailsManager;
-    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
-    @GetMapping
-    public String login() {
-        return "login";
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
-
-    @GetMapping("/signup")
-    public String signup() {
-        return "signup";
-    }
-
     @PostMapping("/signup")
-    public String signUpRequest(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password,
-            @RequestParam("email") String email,
-            @RequestParam("nickname") String nickname) {
-
+    public String signup(@RequestParam String username,
+                                         @RequestParam String nickname,
+                                         @RequestParam String password,
+                                         @RequestParam String email,
+                                         @RequestParam(required = false, defaultValue = "USER") String role,
+                                         HttpServletResponse response) throws IOException {
         User user = User.builder()
                 .username(username)
-                .password(passwordEncoder.encode(password))
-                .email(email)
                 .nickname(nickname)
-                .role(Role.USER) // 기본값으로 ROLE_USER 설정
+                .password(password)
+                .email(email)
+                .role(Role.valueOf(role))
                 .build();
 
-        System.out.println("User details: " + user);
-
-        userDetailsManager.createUser(user);
-        return "redirect:/users";
+        userService.save(user);
+        return "";
     }
+
 }
+

@@ -1,7 +1,7 @@
 package com.board.board.domain.user;
 public enum Role {
-    USER("USER"),
-    ADMIN("ADMIN");
+    USER("ROLE_USER"),
+    ADMIN("ROLE_ADMIN");
 
     private final String role;
 
