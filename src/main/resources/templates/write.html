@@ -21,6 +21,7 @@
 <div class="container">
     <h1 class="mb-4">글 작성</h1>
     <form method="post" action="/boards/write">
+        <input type="hidden" id="loginUser" name="loginUser" th:value="${user.username}">
         <div class="form-group">
             <label for="title">제목</label>
             <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력하세요" required>

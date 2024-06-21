@@ -24,7 +24,7 @@ public class WebSecurityConfig {
                 .formLogin(formLogin -> formLogin
                         .loginPage("/users") // 커스텀 로그인 페이지
                         .loginProcessingUrl("/login") // 로그인 폼의 action URL
-                        .defaultSuccessUrl("/main")
+                        .defaultSuccessUrl("/boards")
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/users")

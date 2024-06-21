@@ -21,7 +21,8 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public Optional<Board> getBoard(Long id) {
-        boardRepository.count(); // 조회수?
+        long count = boardRepository.count();
+        count++;
         return boardRepository.findById(id);
     }
 
@@ -48,6 +49,4 @@ public class BoardServiceImpl implements BoardService{
         }
         return false;
     }
-
-
 }

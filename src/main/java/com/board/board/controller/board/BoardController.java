@@ -29,11 +29,13 @@ public class BoardController {
     private final BoardService boardService;
     private final UserService userService;
 
+
     // 전체 글 목록 조회
     @GetMapping
-    public String getBoards(Model model) {
+    public String getBoards(Model model,@AuthenticationPrincipal User user) {
         List<Board> boardList = boardService.getBoards();
         model.addAttribute("boardList", boardList);
+        model.addAttribute("user", user);
         return "boards";
     }
 
@@ -41,14 +43,17 @@ public class BoardController {
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<Board> getBoard(@PathVariable Long id) {
+
         Optional<Board> board = boardService.getBoard(id);
+
         return board.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     // 글 작성 페이지
     @GetMapping("/write")
-    public String showWritePage(Model model) {
+    public String showWritePage(Model model,@AuthenticationPrincipal User user) {
+        model.addAttribute("user", user);
         model.addAttribute("board", new Board());
         return "write";
     }
@@ -56,12 +61,10 @@ public class BoardController {
     // 글 작성
     @PostMapping("/write")
     @ResponseBody
-    public ResponseEntity<Board> createBoard(@ModelAttribute Board board, HttpServletResponse response,@AuthenticationPrincipal User user) throws IOException {
-        // 로그인한 사용자 정보 설정
-        board.setUser(user);
+    public String createBoard(Board board,@AuthenticationPrincipal User user) {
+        board.setUser(user); // 작성자
         boardService.createBoard(board);
-        response.sendRedirect("/boards");
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return "redirect:/boards";
     }
 
     // 글 수정

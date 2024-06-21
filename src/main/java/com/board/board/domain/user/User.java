@@ -37,16 +37,18 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role; // Role 필드 추가
 
+    private boolean enabled;
+
+
     @Builder
-    public User(String username, String password, String nickname, String email, Role role) {
+    public User(String username, String password, String nickname, String email, Role role,boolean enabled) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
+        this.enabled = enabled;
         this.email = email;
         this.role = role != null ? role : Role.USER;
     }
-
-    private boolean enabled = true;
 
     public User() {
         this.role = Role.USER;

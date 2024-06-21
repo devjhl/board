@@ -17,4 +17,5 @@ public interface BoardService {
     boolean updateBoard(Long id, Board board);
     //글 삭제
     boolean deleteBoard(Long id);
+
 }
