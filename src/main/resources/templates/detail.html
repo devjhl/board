@@ -34,12 +34,13 @@
             margin-bottom: 20px;
         }
         .btn-back, .btn-edit, .btn-save {
-            margin-top: 10px;
-            margin-bottom: 20px;
+            margin-top: 20px;
         }
         footer {
             background-color: #f8f9fa;
             padding: 10px 0;
+            position: absolute;
+            bottom: 0;
             width: 100%;
         }
     </style>
@@ -51,18 +52,20 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="post-title-box">
-                <h1 class="post-title" th:text="${board.title}"></h1>
+                <h1 id="title" class="post-title" th:text="${board.title}"></h1>
             </div>
             <p class="post-meta">
                 작성자: <span th:text="${board.user.username}">작성자</span> | 작성일: <span th:text="${board.formattedCreateDate}">2024-06-21</span> | 조회수: <span th:text="${board.count}">0</span>
             </p>
+            <input type="hidden" id="boardId" th:value="${board.id}">
             <div class="post-content-box">
                 <div id="content" th:utext="${board.content}"></div>
             </div>
             <div class="text-right">
                 <a href="/boards" class="btn btn-primary btn-back">뒤로가기</a>
-                <button class="btn btn-warning btn-edit" onclick="editContent()">수정하기</button>
-                <button class="btn btn-success btn-save d-none" onclick="saveContent()">저장하기</button>
+                <button class="btn btn-warning btn-edit" onclick="editContent()">수정</button>
+                <button class="btn btn-success btn-save d-none" onclick="saveContent()">저장</button>
+                <button class="btn btn-danger btn-delete" onclick="deleteBoard()">삭제</button>
             </div>
         </div>
     </div>
@@ -76,8 +79,12 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
+<script th:inline="javascript">
+    var boardId = /*[[${board.id}]]*/ '0';
+</script>
 <script>
     function editContent() {
+        $('#title').attr('contenteditable', 'true').addClass('border p-2');
         $('#content').summernote({
             height: 300,
             minHeight: null,
@@ -88,11 +95,39 @@
     }
 
     function saveContent() {
-        var markup = $('#content').summernote('code');
+        var title = $('#title').text();
+        var content = $('#content').summernote('code');
         $('#content').summernote('destroy');
-        $('#content').html(markup);
+        $('#content').html(content);
+        $('#title').attr('contenteditable', 'false').removeClass('border p-2');
         $('.btn-edit').removeClass('d-none');
         $('.btn-save').addClass('d-none');
+
+        console.log("제목: " + title);
+        console.log("내용: " + content);
+    }
+
+    function deleteBoard() {
+        var id = boardId;
+
+        if (!id) {
+            console.error("ID가 정의되지 않았습니다.");
+            return;
+        }
+
+        $.ajax({
+            url: "/boards/" + id,
+            type: "DELETE",
+            data: { "id": id },
+            success: function(response) {
+                console.log("삭제 성공:", response);
+                window.location.href = '/boards';
+            },
+            error: function(xhr, status, error) {
+                console.error("삭제 실패:", status, error);
+                console.log("응답 메시지:", xhr.responseText);
+            }
+        });
     }
 </script>
 </body>
