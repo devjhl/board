@@ -4,6 +4,7 @@ import com.board.board.domain.board.Board;
 import com.board.board.domain.user.User;
 import com.board.board.service.BoardService;
 import com.board.board.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,7 +72,8 @@ public class BoardController {
 
     @PutMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<Board> updateBoard(@PathVariable Long id, @RequestBody Board board) {
+    public ResponseEntity<Board> updateBoard(@PathVariable Long id, @RequestBody Board board, HttpServletResponse response) throws IOException {
+        response.sendRedirect("boards");
         boardService.updateBoard(id, board);
         return ResponseEntity.ok(board);
     }

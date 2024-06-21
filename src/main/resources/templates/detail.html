@@ -65,7 +65,9 @@
                 <a href="/boards" class="btn btn-primary btn-back">뒤로가기</a>
                 <button class="btn btn-warning btn-edit" onclick="editContent()">수정</button>
                 <button class="btn btn-success btn-save d-none" onclick="saveContent()">저장</button>
-                <button class="btn btn-danger btn-delete" onclick="deleteBoard()">삭제</button>
+                <div th:style="'margin-top: 20px;'">
+                    <button class="btn btn-danger btn-delete" onclick="deleteBoard()">삭제</button>
+                </div>
             </div>
         </div>
     </div>
@@ -95,6 +97,7 @@
     }
 
     function saveContent() {
+        var id = $('#boardId').val();
         var title = $('#title').text();
         var content = $('#content').summernote('code');
         $('#content').summernote('destroy');
@@ -103,8 +106,30 @@
         $('.btn-edit').removeClass('d-none');
         $('.btn-save').addClass('d-none');
 
-        console.log("제목: " + title);
-        console.log("내용: " + content);
+        boardUpdate(id, title, content);
+    }
+
+    function boardUpdate(id, title, content) {
+        var boardData = {
+            id: id,
+            title: title,
+            content: content
+        };
+
+        $.ajax({
+            url: "/boards/" + id,
+            type: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify(boardData),
+            success: function(response) {
+                console.log("수정 성공", response);
+                window.location.href = '/boards';  // 게시판 목록 페이지로 이동
+            },
+            error: function(xhr, status, error) {
+                console.error("수정 실패:", status, error);
+                console.log("응답 메시지:", xhr.responseText);
+            }
+        });
     }
 
     function deleteBoard() {

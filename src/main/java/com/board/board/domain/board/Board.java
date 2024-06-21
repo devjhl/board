@@ -32,7 +32,7 @@ public class Board {
 
     @Column(updatable = false)
     private LocalDateTime createDate;
-
+    @Column(columnDefinition = "integer default 0", nullable = false)
     private int count;
 
     @PrePersist
@@ -46,7 +46,7 @@ public class Board {
         this.content = content;
         this.user = user;
         this.createDate = LocalDateTime.now();
-        this.count = 0;
+        count++;
     }
 
     public String getFormattedCreateDate() {

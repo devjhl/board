@@ -50,4 +50,6 @@ public class BoardServiceImpl implements BoardService {
     public Page<Board> searchBoards(String keyword, Pageable pageable) {
         return boardRepository.searchBoards(keyword, pageable);  // 변경 사항
     }
+
+
 }
