@@ -3,50 +3,51 @@ package com.board.board.service;
 import com.board.board.domain.board.Board;
 import com.board.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
-@Service
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService{
+@Service
+public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
 
     @Override
-    public List<Board> getBoards() {
-        return boardRepository.findAll();
+    public Page<Board> getBoards(Pageable pageable) {
+        return boardRepository.findAll(pageable);  // 변경 사항
     }
 
     @Override
     public Optional<Board> getBoard(Long id) {
-        long count = boardRepository.count();
-        count++;
         return boardRepository.findById(id);
     }
 
     @Override
     public boolean createBoard(Board board) {
-       boardRepository.save(board);
+        boardRepository.save(board);
         return true;
     }
 
     @Override
     public boolean updateBoard(Long id, Board board) {
-        if(boardRepository.existsById(board.getId())) {
-            boardRepository.save(board);
-            return true;
-        }
-        return false;
+        Board existingBoard = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid board Id:" + id));
+        existingBoard.setTitle(board.getTitle());
+        existingBoard.setContent(board.getContent());
+        boardRepository.save(existingBoard);
+        return true;
     }
 
     @Override
     public boolean deleteBoard(Long id) {
-        if(boardRepository.existsById(id)) {
-            boardRepository.deleteById(id);
-            return true;
-        }
-        return false;
+        boardRepository.deleteById(id);
+        return true;
+    }
+
+    @Override
+    public Page<Board> searchBoards(String keyword, Pageable pageable) {
+        return boardRepository.searchBoards(keyword, pageable);  // 변경 사항
     }
 }
