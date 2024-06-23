@@ -7,13 +7,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
 
-@RestController
+@Controller
 @RequestMapping("/users")
 public class UserController {
 
@@ -38,7 +39,16 @@ public class UserController {
                 .build();
 
         userService.save(user);
-        return "";
+        return "redirect:/users";
+    }
+
+    @GetMapping("/login")
+    public String login(@RequestParam(value = "error", required = false) String error,
+                        Model model) {
+        if (error != null) {
+            model.addAttribute("errorMessage", "아이디 또는 비밀번호가 올바르지 않습니다.");
+        }
+        return "login";
     }
 
 }
