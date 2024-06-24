@@ -33,9 +33,6 @@
             color: #6c757d;
             margin-bottom: 20px;
         }
-        .btn-back, .btn-edit, .btn-save {
-            margin-top: 20px;
-        }
         footer {
             background-color: #f8f9fa;
             padding: 10px 0;
@@ -45,35 +42,11 @@
         }
         .button-container {
             display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            margin: 20px;
+            justify-content: space-around;
+            margin-top: 20px;
         }
-        .button-container button {
-            margin: 5px;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-back {
-            background-color: blue;
-            color: white;
-        }
-        .btn-edit {
-            background-color: yellow;
-            color: black;
-        }
-        .btn-delete {
-            background-color: red;
-            color: white;
-        }
-        .custom-btn {
-            width: 100px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 5px;
+        .button-container .btn {
+            margin: 0 10px;
         }
     </style>
     <link rel="stylesheet" href="/css/styles.css">
@@ -94,10 +67,16 @@
                 <div id="content" th:utext="${board.content}"></div>
             </div>
             <div class="d-flex justify-content-end align-items-center">
-                <a href="/boards" class="btn btn-primary custom-btn">뒤로가기</a>
-                <button class="btn btn-warning custom-btn" onclick="editContent()">수정하기</button>
-                <button class="btn btn-success custom-btn d-none" onclick="saveContent()">저장하기</button>
-                <button class="btn btn-danger custom-btn" onclick="deleteBoard()">삭제</button>
+
+                    <div class="button-container">
+                        <button class="btn btn-primary btn-back">뒤로가기</button>
+                        <span th:if="${loggedInUser.username} == ${board.user.username}">
+                            <button class="btn btn-warning btn-edit" onclick="editContent()">수정하기</button>
+                            <button class="btn btn-danger btn-delete" onclick="deleteBoard()">삭제</button>
+                            <button class="btn btn-success btn-save d-none" onclick="saveContent()">저장</button>
+                         </span>
+                    </div>
+
             </div>
         </div>
     </div>
@@ -163,7 +142,7 @@
     }
 
     function deleteBoard() {
-        var id = boardId;
+        var id = $('#boardId').val();
 
         if (!id) {
             console.error("ID가 정의되지 않았습니다.");
@@ -184,6 +163,12 @@
             }
         });
     }
+
+    $(document).ready(function(){
+        $('.btn-back').on('click', function() {
+            window.history.back();
+        });
+    });
 </script>
 </body>
 </html>

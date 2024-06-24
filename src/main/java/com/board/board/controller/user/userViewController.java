@@ -18,4 +18,8 @@ public class userViewController {
         return "signup";
     }
 
+    @GetMapping("/my")
+    public String my() {
+        return "my";
+    }
 }

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -62,11 +63,11 @@ public class BoardController {
         return "detail";*/
 
     @GetMapping("/write")
-    public String showWritePage(Model model, @AuthenticationPrincipal User user) {
-        model.addAttribute("user", user);
-        model.addAttribute("board", new Board());
+    public String showWritePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("loggedInUser", userDetails != null ? userDetails.getUsername() : null);
         return "write";
     }
+
 
     @PostMapping("/write")
     public String createBoard(Board board, @AuthenticationPrincipal User user) {
