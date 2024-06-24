@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.Principal;
 
 
 @Controller
@@ -49,6 +50,14 @@ public class UserController {
             model.addAttribute("errorMessage", "아이디 또는 비밀번호가 올바르지 않습니다.");
         }
         return "login";
+    }
+
+    @PostMapping("/my")
+    public String my(Principal principal, Model model ) {
+       String getName =  principal.getName();
+        System.out.println("====================" + getName);
+
+        return "my";
     }
 
 }
