@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Header Fragment</title>
@@ -10,17 +10,12 @@
     <div id="header">
         <nav>
             <ul>
-                <li>
-                    <a href="/boards">Home</a>
+                <li><a href="/boards">Home</a></li>
+                <li><a href="#">내정보</a></li>
+                <li th:if="${loggedInUser == null}">
+                    <a href="/users/login">로그인</a>
                 </li>
-                <li>
-                    <a href="">내정보</a>
-                </li>
-                <li th:if="${#authentication == null}">
-                    <a href="/users">로그인</a>
-                </li>
-                <li th:if="${#authentication != null}">
-                    <span th:text="'안녕하세요, ' + ${#authentication.name} + ' 님!'"></span>
+                <li th:if="${loggedInUser != null}">
                     <a href="/logout">로그아웃</a>
                 </li>
             </ul>
