@@ -1,10 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Header Fragment</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
 <div th:fragment="header">
     <div id="header">
         <div class="logo">
-            <!--<a href="/main">함께하길</a>-->
+            <img th:src="@{/images/logo.png}" alt="Logo">
         </div>
         <nav>
-
             <ul>
                 <li>
                     <a href="/boards">Home</a>
@@ -12,13 +19,17 @@
                 <li>
                     <a href="">내정보</a>
                 </li>
-                <li>
+                <li th:if="${#authentication == null}">
                     <a href="/users">로그인</a>
                 </li>
-                <li>
+                <li th:if="${#authentication != null}">
+                    <span th:text="'안녕하세요, ' + ${#authentication.name} + ' 님!'"></span>
                     <a href="/logout">로그아웃</a>
                 </li>
             </ul>
         </nav>
     </div>
 </div>
+<script th:src="@{/js/scripts.js}"></script>
+</body>
+</html>

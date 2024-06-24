@@ -22,4 +22,5 @@ public interface BoardService {
     //글 검색
     Page<Board> searchBoards(String keyword, Pageable pageable);
 
+    int countBoards(Long id);
 }

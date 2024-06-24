@@ -16,5 +16,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("SELECT b FROM Board b WHERE b.title LIKE %:keyword% OR b.content LIKE %:keyword%")
     Page<Board> searchBoards(String keyword, Pageable pageable);
 
-
+    int countBoardById(Long id);
 }

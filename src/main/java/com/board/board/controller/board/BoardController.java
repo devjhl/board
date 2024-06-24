@@ -52,9 +52,14 @@ public class BoardController {
     @GetMapping("/{id}")
     public String getBoard(@PathVariable Long id, Model model) {
         Optional<Board> board = boardService.getBoard(id);
-        model.addAttribute("board", board.get());
+        if (board.isPresent()) {
+            model.addAttribute("board", board.get());
+        }
         return "detail";
     }
+
+       /* model.addAttribute("board", board.get());
+        return "detail";*/
 
     @GetMapping("/write")
     public String showWritePage(Model model, @AuthenticationPrincipal User user) {

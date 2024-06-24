@@ -22,7 +22,12 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Optional<Board> getBoard(Long id) {
-        return boardRepository.findById(id);
+        Optional<Board> board = boardRepository.findById(id);
+        board.ifPresent(b-> {
+            b.setCount(b.getCount() + 1);
+            boardRepository.save(b);
+        });
+        return board;
     }
 
     @Override
@@ -49,6 +54,11 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Page<Board> searchBoards(String keyword, Pageable pageable) {
         return boardRepository.searchBoards(keyword, pageable);  // 변경 사항
+    }
+
+    @Override
+    public int countBoards(Long id) {
+        return boardRepository.countBoardById(id);
     }
 
 

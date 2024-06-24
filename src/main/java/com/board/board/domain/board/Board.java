@@ -46,7 +46,6 @@ public class Board {
         this.content = content;
         this.user = user;
         this.createDate = LocalDateTime.now();
-        count++;
     }
 
     public String getFormattedCreateDate() {
