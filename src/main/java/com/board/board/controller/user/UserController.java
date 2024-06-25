@@ -5,7 +5,9 @@ import com.board.board.domain.user.User;
 import com.board.board.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,13 +54,7 @@ public class UserController {
         return "login";
     }
 
-    @PostMapping("/my")
-    public String my(Principal principal, Model model ) {
-       String getName =  principal.getName();
-        System.out.println("====================" + getName);
 
-        return "my";
-    }
 
 }
 

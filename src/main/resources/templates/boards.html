@@ -33,7 +33,7 @@
 <div th:replace="~{fragments/header :: header}"></div>
 <div class="container mt-5">
     <h2 class="mb-4">게시판</h2>
-    <!--<h1 th:text="'안녕하세요, ' + ${loggedInUser} + '님!'"></h1>-->
+    <h1 th:text="'안녕하세요, ' + ${loggedInUserName} + '님!'"></h1>
     <div class="search-box">
         <form th:action="@{/boards}" method="get" class="form-inline">
             <input type="text" class="form-control mr-2" placeholder="검색어를 입력하세요" name="keyword" th:value="${keyword}">
