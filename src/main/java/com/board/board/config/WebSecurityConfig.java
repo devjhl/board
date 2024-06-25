@@ -40,7 +40,7 @@ public class WebSecurityConfig {
 
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/static/**", "/users/**","/my").permitAll()
+                        .requestMatchers("/static/**", "/users/**","/my","/boards/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin

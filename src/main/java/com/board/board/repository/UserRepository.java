@@ -10,4 +10,6 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     // 테이블에 해당 username을 가진 튜플이 존재하는지 확인함
     boolean existsByUsername(String username);
+
+    User findById(Long userId);
 }

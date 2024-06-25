@@ -1,5 +1,7 @@
 package com.board.board.controller.board;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import com.board.board.domain.board.Board;
 import com.board.board.domain.user.User;
 import com.board.board.service.BoardService;
@@ -65,18 +67,22 @@ public class BoardController {
         return "detail";*/
 
     @GetMapping("/write")
-    public String showWritePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        model.addAttribute("loggedInUser", userDetails != null ? userDetails.getUsername() : null);
+    public String showWritePage(Model model, Authentication authentication) {
+        model.addAttribute("user", authentication.getPrincipal());
         return "write";
     }
 
-
     @PostMapping("/write")
-    public String createBoard(Board board, @AuthenticationPrincipal User user) {
-        board.setUser(user);
+    public String createBoard(Board board, @AuthenticationPrincipal User currentUser, Model model) {
+
+        board.setUser(currentUser);  // 로그인한 사용자를 게시글 작성자로 설정
+
         boardService.createBoard(board);
+
         return "redirect:/boards";
     }
+
+
 
     @PutMapping("/{id}")
     @ResponseBody

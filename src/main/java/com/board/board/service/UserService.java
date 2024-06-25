@@ -2,10 +2,12 @@ package com.board.board.service;
 
 import com.board.board.domain.user.User;
 import com.board.board.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
 @Service
 public class UserService {
     @Autowired
@@ -24,4 +26,7 @@ public class UserService {
     }
 
 
+    public User findById(Long userId) {
+        return userRepository.findById(userId);
+    }
 }
