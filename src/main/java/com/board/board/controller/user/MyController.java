@@ -3,7 +3,6 @@ package com.board.board.controller.user;
 import com.board.board.service.CustomUserDetailsService;
 import com.board.board.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @Controller
 public class MyController {
 
-    @Autowired
     private final CustomUserDetailsService customUserDetailsService;
 
     @ModelAttribute
