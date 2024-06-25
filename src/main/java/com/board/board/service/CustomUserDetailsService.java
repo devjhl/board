@@ -26,4 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getAuthorities() // 권한 설정
         );
     }
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
 }

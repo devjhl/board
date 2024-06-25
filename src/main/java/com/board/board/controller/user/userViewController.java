@@ -17,9 +17,4 @@ public class userViewController {
     public String signup() {
         return "signup";
     }
-
-    @GetMapping("/my")
-    public String my() {
-        return "my";
-    }
 }
