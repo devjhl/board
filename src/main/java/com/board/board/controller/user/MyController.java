@@ -20,16 +20,18 @@ public class MyController {
     private final CustomUserDetailsService customUserDetailsService;
 
     @ModelAttribute
-    public void addUserToModel(Model model) {
+    public User addUserToModel(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
         if (authentication != null && authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.User) {
-            org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+            user = (User) authentication.getPrincipal();
             model.addAttribute("loggedInUser", user);
             com.board.board.domain.user.User users = customUserDetailsService.getUserByUsername(user.getUsername());
             model.addAttribute("LoginUser", user);
             com.board.board.domain.user.User userByUsername = customUserDetailsService.getUserByUsername(user.getUsername());
             model.addAttribute("LoginUsers", userByUsername);
         }
+        return user;
     }
 
     @GetMapping("/users/my")

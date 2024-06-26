@@ -1,5 +1,8 @@
 package com.board.board.controller.board;
 
+import com.board.board.controller.user.MyController;
+import com.board.board.repository.BoardRepository;
+import com.board.board.service.CustomUserDetailsService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import com.board.board.domain.board.Board;
@@ -32,6 +35,7 @@ public class BoardController {
 
     private final BoardService boardService;
     private final UserService userService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @GetMapping
     public String getBoards(Model model, @AuthenticationPrincipal User user,
@@ -67,16 +71,16 @@ public class BoardController {
         return "detail";*/
 
     @GetMapping("/write")
-    public String showWritePage(Model model, Authentication authentication) {
-        model.addAttribute("user", authentication.getPrincipal());
+    public String showWritePage(Model model ) {
         return "write";
     }
 
     @PostMapping("/write")
-    public String createBoard(Board board, @AuthenticationPrincipal User currentUser, Model model) {
-
-        board.setUser(currentUser);  // 로그인한 사용자를 게시글 작성자로 설정
-
+    public String createBoard(Board board,  Model model) {
+        MyController myController = new MyController(customUserDetailsService);
+        org.springframework.security.core.userdetails.User loginUser = myController.addUserToModel(model);
+        User userByUsername = customUserDetailsService.getUserByUsername(loginUser.getUsername());
+        board.setUser(userByUsername);  // 로그인한 사용자를 게시글 작성자로 설정
         boardService.createBoard(board);
 
         return "redirect:/boards";
@@ -98,7 +102,4 @@ public class BoardController {
         boardService.deleteBoard(id);
         return ResponseEntity.noContent().build();
     }
-
-
-
 }
