@@ -10,6 +10,8 @@ import com.board.board.repository.CommentRepository;
 import com.board.board.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.Optional;
 
@@ -35,5 +37,19 @@ public class CommentService {
         commentRepository.save(comment);
 
         return dto.getId();
+    }
+
+    @Transactional
+    public void update(Long boardId, Long id, CommentRequestDto dto) {
+        Comment comment = (Comment) commentRepository.findByBoardIdAndId(boardId, id).orElseThrow(() ->
+                new IllegalArgumentException("해당 댓글이 존재하지 않습니다. " + id));
+        comment.update(dto.getComment());
+    }
+
+    @Transactional
+    public void delete(Long boardId, Long id) {
+        Comment comment = (Comment) commentRepository.findByBoardIdAndId(boardId, id).orElseThrow(() ->
+                new IllegalArgumentException("해당 댓글이 존재하지 않습니다. id=" + id));
+        commentRepository.delete(comment);
     }
 }

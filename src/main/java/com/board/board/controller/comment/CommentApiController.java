@@ -1,4 +1,4 @@
-package com.board.board.controller.board;
+package com.board.board.controller.comment;
 
 
 import com.board.board.controller.user.MyController;
@@ -30,5 +30,20 @@ public class CommentApiController {
 
         // JSON 형식의 응답 반환
         return ResponseEntity.ok().body("{\"status\":\"success\"}");
+    }
+
+    //업데이트
+    @PutMapping({"/posts/{postsId}/comments/{id}"})
+    public ResponseEntity<Long> update(@PathVariable Long postsId,@PathVariable Long id,@RequestBody CommentRequestDto dto) {
+        commentService.update(postsId, id , dto);
+        return ResponseEntity.ok(id);
+    }
+
+
+    //삭제
+    @DeleteMapping("/posts/{postsId}/comments/{id}")
+    public ResponseEntity<Long> delete(@PathVariable Long postsId, @PathVariable Long id) {
+        commentService.delete(postsId, id);
+        return ResponseEntity.ok(id);
     }
 }
