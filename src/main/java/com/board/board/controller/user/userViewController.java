@@ -10,11 +10,11 @@ public class userViewController {
 
     @GetMapping
     public String login() {
-        return "login";
+        return "user/login";
     }
 
     @GetMapping("/signup")
     public String signup() {
-        return "signup";
+        return "user/signup";
     }
 }

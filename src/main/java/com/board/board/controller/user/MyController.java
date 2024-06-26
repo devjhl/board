@@ -33,6 +33,6 @@ public class MyController {
 
     @GetMapping("/users/my")
     public String myPage(Model model) {
-        return "my";
+        return "user/my";
     }
 }

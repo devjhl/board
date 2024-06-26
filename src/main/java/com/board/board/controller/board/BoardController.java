@@ -51,7 +51,7 @@ public class BoardController {
         model.addAttribute("user", user);
         model.addAttribute("totalPages", boardPage.getTotalPages());
         model.addAttribute("currentPage", page);
-        return "boards";
+        return "board/boards";
     }
     //글 상세보기
     @GetMapping("/{id}")
@@ -70,14 +70,14 @@ public class BoardController {
         }
 
 
-        return "detail";
+        return "board/detail";
     }
 
 
 
     @GetMapping("/write")
     public String showWritePage(Model model ) {
-        return "write";
+        return "board/write";
     }
 
     @PostMapping("/write")

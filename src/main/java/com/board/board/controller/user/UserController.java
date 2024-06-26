@@ -45,7 +45,7 @@ public class UserController {
         if (error != null) {
             model.addAttribute("errorMessage", "아이디 또는 비밀번호가 올바르지 않습니다.");
         }
-        return "login";
+        return "user/login";
     }
 
 
