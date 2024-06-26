@@ -27,7 +27,7 @@ public class CommentApiController {
         org.springframework.security.core.userdetails.User loginUser = myController.addUserToModel(model);
         User user = customUserDetailsService.getUserByUsername(loginUser.getUsername());
 
-        return ResponseEntity.ok(commentService.commentSave(user.getUsername(), id, dto));
+        return ResponseEntity.ok(commentService.commentSave(user.getNickname(), id, dto));
     }
 
 }

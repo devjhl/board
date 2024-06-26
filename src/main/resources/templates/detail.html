@@ -78,7 +78,7 @@
             <p class="post-meta">
                 작성자: <span th:text="${board.user.username}">작성자</span> | 작성일: <span th:text="${board.formattedCreateDate}">2024-06-21</span> | 조회수: <span th:text="${board.count}">0</span>
             </p>
-            <input type="hidden" id="boardId" th:value="${board.id}">
+            <input type="hidden" id="boardId"  name="boardId" th:value="${board.id}">
             <div class="post-content-box">
                 <div id="content" th:utext="${board.content}"></div>
             </div>
@@ -106,8 +106,8 @@
                 <span style="font-size: small" th:text="${comment.nickname}">Nickname</span>
                 <span style="font-size: xx-small" th:text="${comment.createdDate}">Date</span>&nbsp;
                 <!-- 수정 및 삭제 버튼 -->
-                <button class="badge bi bi-pencil-square" th:if="${#authorization.expression('hasRole(''ADMIN'') or principal.username == comment.username')}"> 수정</button>
-                <button class="badge bi bi-trash" th:if="${#authorization.expression('hasRole(''ADMIN'') or principal.username == comment.username')}"> 삭제</button>
+<!--                <button class="badge bi bi-pencil-square" th:if="${#authorization.expression('hasRole(''ADMIN'') or principal.username == comment.username')}"> 수정</button>-->
+<!--                <button class="badge bi bi-trash" th:if="${#authorization.expression('hasRole(''ADMIN'') or principal.username == comment.username')}"> 삭제</button>-->
             </span>
                         <div th:text="${comment.comment}">Comment Text</div>
                     </li>
@@ -117,9 +117,9 @@
                 <div class="card-header bi bi-chat-right-dots">Write a Comment</div>
 
                 <!-- 댓글 작성 폼 -->
-                <form th:action="@{/comment/save}" method="post">
+                <form th:action="@{/api/posts/{id}/comments(id=${board.getId()})}" method="post">
                     <!-- 포스트 ID를 숨겨진 필드로 저장 -->
-                   <input type="hidden" id="board_id" th:value="${board.getId()}" name="board_id">
+                    <input type="hidden" id="boardIdd" th:value="${board.getId()}" name="boardIdd">
 
                     <!-- 로그인한 사용자만 댓글 작성 가능 -->
                     <div th:if="${loggedInUser != null}">
@@ -150,7 +150,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
 <script th:inline="javascript">
-    var boardId = /*[[${board.id}]]*/ '0';
+    //boardIdvar boardId = /*[[${board.id}]]*/ '0';
 </script>
 <script>
     function editContent() {
@@ -236,7 +236,6 @@
 
             // 댓글 저장 버튼 이벤트 바인딩
             $('#btn-comment-save').on('click', function() {
-                alert("js까지 가짐")
                 _this.commentSave();
             });
         },
@@ -245,7 +244,7 @@
         commentSave: function() {
             // 댓글 데이터 수집
             const data = {
-                postsId: $('#postsId').val(),
+                boardIdd: $('#boardIdd').val(),
                 comment: $('#comment').val()
             };
 
@@ -257,7 +256,7 @@
                 // Ajax 요청: 댓글 저장
                 $.ajax({
                     type: 'POST',
-                    url: '/api/posts/' + data.postsId + '/comments',
+                    url: '/api/posts/' + data.boardIdd + '/comments',
                     dataType: 'JSON',
                     contentType: 'application/json; charset=utf-8',
                     data: JSON.stringify(data)
