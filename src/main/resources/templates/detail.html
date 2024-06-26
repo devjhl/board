@@ -92,21 +92,50 @@
                             <button class="btn btn-success btn-save d-none" onclick="saveContent()">저장</button>
                          </span>
                     </div>
-
-
             </div>
-            <div class="comments-container">
-                <h2>댓글</h2>
-                <div class="form-group">
-                    <textarea class="form-control" rows="3" ></textarea>
+                <!-- 카드 헤더에 댓글 수 표시 -->
+                <div class="card-header bi bi-chat-dots">
+                    <!--<span th:text="${#lists.size(comments)} + ' Comments'">0 Comments</span>-->
                 </div>
-                <button class="btn btn-primary">저장</button>
-                <div class="comments-list mt-3">
-                    <div class="comment">
-                        <p class="comment-header"><strong>admin</strong> <span>Posted on 26 06, 2024</span></p>
-                        <p>ㅎㅇ</p>
+
+                <!-- 댓글 내용 부분 -->
+                <ul class="list-group-flush">
+                    <!-- Thymeleaf의 th:each로 댓글 리스트 반복 -->
+                    <li class="list-group-item" th:each="comment : ${comments}">
+            <span>
+                <span style="font-size: small" th:text="${comment.nickname}">Nickname</span>
+                <span style="font-size: xx-small" th:text="${comment.createdDate}">Date</span>&nbsp;
+                <!-- 수정 및 삭제 버튼 -->
+                <button class="badge bi bi-pencil-square" th:if="${#authorization.expression('hasRole(''ADMIN'') or principal.username == comment.username')}"> 수정</button>
+                <button class="badge bi bi-trash" th:if="${#authorization.expression('hasRole(''ADMIN'') or principal.username == comment.username')}"> 삭제</button>
+            </span>
+                        <div th:text="${comment.comment}">Comment Text</div>
+                    </li>
+                </ul>
+            <br/>
+            <div class="card">
+                <div class="card-header bi bi-chat-right-dots">Write a Comment</div>
+
+                <!-- 댓글 작성 폼 -->
+                <form th:action="@{/comment/save}" method="post">
+                    <!-- 포스트 ID를 숨겨진 필드로 저장 -->
+                   <input type="hidden" id="board_id" th:value="${board.getId()}" name="board_id">
+
+                    <!-- 로그인한 사용자만 댓글 작성 가능 -->
+                    <div th:if="${loggedInUser != null}">
+                        <div class="card-body">
+                            <textarea id="comment" class="form-control" rows="4" placeholder="댓글을 입력하세요" name="commentText"></textarea>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-outline-primary bi bi-pencil-square" id="btn-comment-save" name="btn-comment-save">등록</button>
+                        </div>
                     </div>
-                </div>
+
+                    <!-- 로그인하지 않은 사용자에게 로그인 요청 -->
+                    <div th:unless="${loggedInUser != null}" class="card-body" style="font-size: small">
+                        <a href="/users">로그인</a>을 하시면 댓글을 등록할 수 있습니다.
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -199,6 +228,51 @@
             window.history.back();
         });
     });
+
+    const main = {
+        // 초기화 함수
+        init: function() {
+            const _this = this;
+
+            // 댓글 저장 버튼 이벤트 바인딩
+            $('#btn-comment-save').on('click', function() {
+                alert("js까지 가짐")
+                _this.commentSave();
+            });
+        },
+
+        // 댓글 저장 함수
+        commentSave: function() {
+            // 댓글 데이터 수집
+            const data = {
+                postsId: $('#postsId').val(),
+                comment: $('#comment').val()
+            };
+
+            // 댓글 내용 검증: 공백 또는 빈 문자열 체크
+            if (!data.comment || data.comment.trim() === "") {
+                alert("공백 또는 입력하지 않은 부분이 있습니다.");
+                return false;
+            } else {
+                // Ajax 요청: 댓글 저장
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/posts/' + data.postsId + '/comments',
+                    dataType: 'JSON',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(data)
+                }).done(function() {
+                    alert('댓글이 등록되었습니다.');
+                    window.location.reload(); // 성공 시 페이지 새로고침
+                }).fail(function(error) {
+                    alert(JSON.stringify(error)); // 실패 시 오류 메시지 표시
+                });
+            }
+        }
+    };
+
+    main.init(); // 메인 객체 초기화 호출
+
 </script>
 </body>
 </html>

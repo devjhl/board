@@ -1,6 +1,8 @@
 package com.board.board.controller.board;
 
 import com.board.board.controller.user.MyController;
+import com.board.board.dto.BoardResponseDto;
+import com.board.board.dto.CommentResponseDto;
 import com.board.board.repository.BoardRepository;
 import com.board.board.service.CustomUserDetailsService;
 import org.springframework.security.core.Authentication;
@@ -57,18 +59,27 @@ public class BoardController {
         model.addAttribute("currentPage", page);
         return "boards";
     }
-
+    //글 상세보기
     @GetMapping("/{id}")
     public String getBoard(@PathVariable Long id, Model model) {
         Optional<Board> board = boardService.getBoard(id);
+        BoardResponseDto dto = boardService.findById(id);
+        List<CommentResponseDto> comments = dto.getComments();
+
         if (board.isPresent()) {
             model.addAttribute("board", board.get());
         }
+
+        //댓글 관련
+        if(comments != null && !comments.isEmpty()) {
+            model.addAttribute("comments", comments);
+        }
+
+
         return "detail";
     }
 
-       /* model.addAttribute("board", board.get());
-        return "detail";*/
+
 
     @GetMapping("/write")
     public String showWritePage(Model model ) {

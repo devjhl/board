@@ -1,0 +1,33 @@
+package com.board.board.controller.board;
+
+
+import com.board.board.controller.user.MyController;
+import com.board.board.domain.user.User;
+import com.board.board.dto.CommentRequestDto;
+import com.board.board.service.CommentService;
+import com.board.board.service.CustomUserDetailsService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.Model;
+
+@RequiredArgsConstructor
+@RequestMapping("/api")
+@RestController
+public class CommentApiController {
+
+    private final CommentService commentService;
+    private final CustomUserDetailsService customUserDetailsService;
+
+    @PostMapping("/posts/{id}/comments")
+    public ResponseEntity commentSave(@PathVariable Long id, @RequestBody CommentRequestDto dto,Model model) {
+        //로그인정보
+
+        MyController myController = new MyController(customUserDetailsService);
+        org.springframework.security.core.userdetails.User loginUser = myController.addUserToModel(model);
+        User user = customUserDetailsService.getUserByUsername(loginUser.getUsername());
+
+        return ResponseEntity.ok(commentService.commentSave(user.getUsername(), id, dto));
+    }
+
+}

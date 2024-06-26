@@ -1,7 +1,9 @@
 package com.board.board.service;
 
 import com.board.board.domain.board.Board;
+import com.board.board.dto.BoardResponseDto;
 import com.board.board.repository.BoardRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,6 +62,15 @@ public class BoardServiceImpl implements BoardService {
     public int countBoards(Long id) {
         return boardRepository.countBoardById(id);
     }
+
+    @Override
+    public BoardResponseDto findById(Long id) {
+        Board board = boardRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Board not found with id " + id));
+
+        return new BoardResponseDto(board);
+    }
+
 
 
 }

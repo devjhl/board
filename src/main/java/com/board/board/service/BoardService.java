@@ -1,6 +1,7 @@
 package com.board.board.service;
 
 import com.board.board.domain.board.Board;
+import com.board.board.dto.BoardResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -23,4 +24,6 @@ public interface BoardService {
     Page<Board> searchBoards(String keyword, Pageable pageable);
 
     int countBoards(Long id);
+
+    BoardResponseDto findById(Long id);
 }
