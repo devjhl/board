@@ -1,11 +1,13 @@
 package com.board.board.domain.board;
 
+import com.board.board.domain.comment.Comment;
 import com.board.board.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,14 +28,24 @@ public class Board {
     @Column(nullable = false)
     private String content;
 
+    private String writer;
+
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
     @Column(updatable = false)
     private LocalDateTime createDate;
+
+    private LocalDateTime ModifiedDate;
+
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int count;
+
+    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OrderBy("id asc ")
+    private List<Comment> comments;
+
 
     @PrePersist
     public void prePersist() {

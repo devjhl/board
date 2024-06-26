@@ -48,6 +48,22 @@
         .button-container .btn {
             margin: 0 10px;
         }
+        .comments-container {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .comment {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .comment-header span {
+            color: #aaa;
+            font-size: 0.85rem;
+        }
     </style>
     <link rel="stylesheet" href="/css/styles.css">
     <div th:replace="fragments/header :: header"></div>
@@ -77,6 +93,20 @@
                          </span>
                     </div>
 
+
+            </div>
+            <div class="comments-container">
+                <h2>댓글</h2>
+                <div class="form-group">
+                    <textarea class="form-control" rows="3" ></textarea>
+                </div>
+                <button class="btn btn-primary">저장</button>
+                <div class="comments-list mt-3">
+                    <div class="comment">
+                        <p class="comment-header"><strong>admin</strong> <span>Posted on 26 06, 2024</span></p>
+                        <p>ㅎㅇ</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
