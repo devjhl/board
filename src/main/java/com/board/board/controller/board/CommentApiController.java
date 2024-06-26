@@ -26,8 +26,9 @@ public class CommentApiController {
         org.springframework.security.core.userdetails.User loginUser = myController.addUserToModel(model);
         User user = customUserDetailsService.getUserByUsername(loginUser.getUsername());
 
-        return ResponseEntity.ok(commentService.commentSave(user.getNickname(), id, dto));
+        commentService.commentSave(user.getNickname(), id, dto);
+
+        // JSON 형식의 응답 반환
+        return ResponseEntity.ok().body("{\"status\":\"success\"}");
     }
-
-
 }

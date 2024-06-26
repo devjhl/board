@@ -240,7 +240,6 @@
                 $.ajax({
                     type: 'POST',
                     url: '/api/posts/' + data.boardIdd + '/comments',
-                    dataType: 'json',
                     contentType: 'application/json; charset=utf-8',
                     data: JSON.stringify(data),
                     success: function() {
