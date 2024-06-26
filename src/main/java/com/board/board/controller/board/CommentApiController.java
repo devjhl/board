@@ -20,14 +20,14 @@ public class CommentApiController {
     private final CustomUserDetailsService customUserDetailsService;
 
     @PostMapping("/posts/{id}/comments")
-    public ResponseEntity commentSave(@PathVariable Long id, @RequestBody CommentRequestDto dto,Model model) {
-        //로그인정보
-
+    public ResponseEntity<?> commentSave(@PathVariable Long id, @RequestBody CommentRequestDto dto, Model model) {
+        // 로그인 정보
         MyController myController = new MyController(customUserDetailsService);
         org.springframework.security.core.userdetails.User loginUser = myController.addUserToModel(model);
         User user = customUserDetailsService.getUserByUsername(loginUser.getUsername());
 
         return ResponseEntity.ok(commentService.commentSave(user.getNickname(), id, dto));
     }
+
 
 }

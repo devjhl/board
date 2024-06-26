@@ -116,22 +116,16 @@
             <div class="card">
                 <div class="card-header bi bi-chat-right-dots">Write a Comment</div>
 
-                <!-- 댓글 작성 폼 -->
-                <form th:action="@{/api/posts/{id}/comments(id=${board.getId()})}" method="post">
-                    <!-- 포스트 ID를 숨겨진 필드로 저장 -->
+                <form id="commentForm">
                     <input type="hidden" id="boardIdd" th:value="${board.getId()}" name="boardIdd">
-
-                    <!-- 로그인한 사용자만 댓글 작성 가능 -->
                     <div th:if="${loggedInUser != null}">
                         <div class="card-body">
                             <textarea id="comment" class="form-control" rows="4" placeholder="댓글을 입력하세요" name="commentText"></textarea>
                         </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-outline-primary bi bi-pencil-square" id="btn-comment-save" name="btn-comment-save">등록</button>
+                            <button type="button" class="btn btn-outline-primary" id="btn-comment-save">등록</button>
                         </div>
                     </div>
-
-                    <!-- 로그인하지 않은 사용자에게 로그인 요청 -->
                     <div th:unless="${loggedInUser != null}" class="card-body" style="font-size: small">
                         <a href="/users">로그인</a>을 하시면 댓글을 등록할 수 있습니다.
                     </div>
@@ -228,49 +222,39 @@
             window.history.back();
         });
     });
+    $(document).ready(function() {
+        $('#btn-comment-save').on('click', function() {
+            commentSave();
+        });
 
-    const main = {
-        // 초기화 함수
-        init: function() {
-            const _this = this;
-
-            // 댓글 저장 버튼 이벤트 바인딩
-            $('#btn-comment-save').on('click', function() {
-                _this.commentSave();
-            });
-        },
-
-        // 댓글 저장 함수
-        commentSave: function() {
-            // 댓글 데이터 수집
-            const data = {
+        function commentSave() {
+            var data = {
                 boardIdd: $('#boardIdd').val(),
                 comment: $('#comment').val()
             };
 
-            // 댓글 내용 검증: 공백 또는 빈 문자열 체크
             if (!data.comment || data.comment.trim() === "") {
                 alert("공백 또는 입력하지 않은 부분이 있습니다.");
                 return false;
             } else {
-                // Ajax 요청: 댓글 저장
                 $.ajax({
                     type: 'POST',
                     url: '/api/posts/' + data.boardIdd + '/comments',
-                    dataType: 'JSON',
+                    dataType: 'json',
                     contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify(data)
-                }).done(function() {
-                    alert('댓글이 등록되었습니다.');
-                    window.location.reload(); // 성공 시 페이지 새로고침
-                }).fail(function(error) {
-                    alert(JSON.stringify(error)); // 실패 시 오류 메시지 표시
+                    data: JSON.stringify(data),
+                    success: function() {
+                        alert('댓글이 등록되었습니다.');
+                        window.location.reload();
+                    },
+                    error: function(error) {
+                        alert('오류가 발생했습니다: ' + JSON.stringify(error));
+                    }
                 });
             }
         }
-    };
+    });
 
-    main.init(); // 메인 객체 초기화 호출
 
 </script>
 </body>
