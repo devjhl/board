@@ -1,6 +1,7 @@
 package com.board.board.service;
 
 import com.board.board.domain.user.User;
+import com.board.board.dto.UserRequestDto;
 import com.board.board.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,5 +29,10 @@ public class UserService {
 
     public User findById(Long userId) {
         return userRepository.findById(userId);
+    }
+
+    //유저 수정
+    public void modify(UserRequestDto dto) {
+        User user = userRepository.findById(dto.toEntity().getId()).o
     }
 }
