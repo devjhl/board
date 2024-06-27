@@ -43,6 +43,7 @@ public class CommentApiController {
     //삭제
     @DeleteMapping("/posts/{postsId}/comments/{id}")
     public ResponseEntity<Long> delete(@PathVariable Long postsId, @PathVariable Long id) {
+        System.out.println("Delete request received with postsId: " + postsId + ", id: " + id); // 디버깅용 로그
         commentService.delete(postsId, id);
         return ResponseEntity.ok(id);
     }

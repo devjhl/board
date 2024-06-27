@@ -4,13 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>글 상세보기</title>
+    <!-- Bootstrap CSS 추가 -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Summernote CSS 추가 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css" rel="stylesheet">
+    <!-- Custom CSS 추가 -->
     <link rel="stylesheet" href="/css/detail.css">
     <link rel="stylesheet" href="/css/boards.css">
     <link rel="stylesheet" href="/css/styles.css">
+    <!-- Bootstrap Icons 추가 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
+<!-- 헤더 추가 -->
 <div th:replace="fragments/header :: header"></div>
 <div class="container">
     <div class="row justify-content-center">
@@ -29,40 +35,47 @@
                 <div class="button-container">
                     <button class="btn btn-primary btn-back">뒤로가기</button>
                     <span th:if="${loggedInUser.username} == ${board.user.username}">
-                            <button class="btn btn-warning btn-edit" onclick="editContent()">수정하기</button>
-                            <button class="btn btn-danger btn-delete" onclick="deleteBoard()">삭제</button>
-                            <button class="btn btn-success btn-save d-none" onclick="saveContent()">저장</button>
-                        </span>
+                        <button class="btn btn-warning btn-edit" onclick="editContent()">수정하기</button>
+                        <button class="btn btn-danger btn-delete" onclick="deleteBoard()">삭제</button>
+                        <button class="btn btn-success btn-save d-none" onclick="saveContent()">저장</button>
+                    </span>
                 </div>
             </div>
 
-            <!-- 댓글 내용 부분 -->
             <div class="card">
                 <ul class="list-group-flush">
                     <li class="list-group-item" th:each="comment : ${comments}">
-                            <span>
-                                <span style="font-size: small" th:text="${comment.nickname}">Nickname</span>
-                                <span style="font-size: xx-small" th:text="${comment.createdDate}">Date</span>
-                            </span>
-                        <a type="button" data-toggle="collapse" th:attr="data-target='.multi-collapse-' + ${comment.id}" class="bi bi-pencil-square"></a>
-                        <a type="button" th:onclick="'main.commentDelete(' + ${board.id} + ',' + ${comment.id} + ')'" class="bi bi-x-square"></a>
+    <span>
+        <span style="font-size: small" th:text="${comment.nickname}">Nickname</span>
+        <span style="font-size: xx-small" th:text="${comment.createdDate}">Date</span>
+    </span>
+                        <!-- 댓글 수정 버튼 -->
+                        <button type="button" th:if="${loggedInUser.username} == ${comment.nickname}" data-toggle="collapse" th:attr="data-target='.multi-collapse-' + ${comment.id}" class="btn btn-light" title="수정">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <!-- 댓글 삭제 버튼 -->
+                        <button type="button" th:if="${loggedInUser.username} == ${comment.nickname}" class="btn btn-light" title="삭제" onclick="commentDelete(this)">
+                            <i class="bi bi-x"></i>
+                        </button>
                         <p th:text="${comment.comment}" class="collapse multi-collapse-[[${comment.id}]] show">Comment Text</p>
-                        <form class="collapse multi-collapse-[[${comment.id}]]">
-                            <input type="hidden" id="id" th:value="${comment.id}">
-                            <input type="hidden" id="postsId" th:value="${board.id}">
+                        <!-- 댓글 수정 폼 -->
+                        <form class="collapse multi-collapse-[[${comment.id}]]" onsubmit="return false;">
+                            <input type="hidden" name="id" th:value="${comment.id}">
+                            <input type="hidden" name="postsId" th:value="${board.id}">
                             <div class="form-group">
                                 <textarea class="form-control" id="comment-content" rows="3" th:text="${comment.comment}"></textarea>
                             </div>
-                            <button type="button" id="btn-comment-update" class="btn btn-outline-primary bi bi-pencil-square">수정</button>
                         </form>
                     </li>
+
                 </ul>
             </div>
-            <br/>
+
             <div class="card">
                 <div class="card-header bi bi-chat-right-dots">Write a Comment</div>
                 <form id="commentForm">
                     <input type="hidden" id="boardIdd" th:value="${board.id}" name="boardIdd">
+                    <!-- 로그인한 사용자일 경우 댓글 작성 가능 -->
                     <div th:if="${loggedInUser != null}">
                         <div class="card-body">
                             <textarea id="comment" class="form-control" rows="4" placeholder="댓글을 입력하세요" name="commentText"></textarea>
@@ -71,21 +84,73 @@
                             <button type="button" class="btn btn-outline-primary" id="btn-comment-save">등록</button>
                         </div>
                     </div>
+                    <!-- 로그인하지 않은 경우 -->
                     <div th:unless="${loggedInUser != null}" class="card-body" style="font-size: small">
                         <a href="/users">로그인</a>을 하시면 댓글을 등록할 수 있습니다.
                     </div>
                 </form>
             </div>
-        </div>
-    </div>
-</div>
 
-<div th:insert="~{fragments/footer :: footer}" class="mt-5"></div>
+            <div th:insert="~{fragments/footer :: footer}" class="mt-5"></div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
-<script type="text/javascript" src="/js/detail.js"></script>
+            <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
+            <script type="text/javascript" src="/js/detail.js"></script>
+            <script>
+                function commentUpdate(button) {
+                    const form = button.closest('form'); // 버튼의 부모 폼 요소를 찾음
+                    const data = {
+                        id: form.querySelector('#id').value,
+                        postsId: form.querySelector('#postsId').value,
+                        comment: form.querySelector('#comment-content').value.trim(),
+                    };
+
+                    if (!data.comment) {
+                        alert("공백 또는 입력하지 않은 부분이 있습니다.");
+                        return false;
+                    }
+
+                    if (confirm("수정하시겠습니까?")) {
+                        $.ajax({
+                            type: 'PUT',
+                            url: `/api/posts/${data.postsId}/comments/${data.id}`,
+                            dataType: 'json',
+                            contentType: 'application/json; charset=utf-8',
+                            data: JSON.stringify(data),
+                        }).done(() => {
+                            window.location.reload();
+                        }).fail((error) => {
+                            alert(JSON.stringify(error));
+                        });
+                    }
+                }
+
+                function commentDelete(button) {
+                    // 버튼의 부모 폼 요소를 찾습니다.
+                    const form = button.closest('.list-group-item');
+                    const postsId = form.querySelector('input[name="postsId"]').value;
+                    const commentId = form.querySelector('input[name="id"]').value;
+
+                    console.log(`commentDelete called with postsId: ${postsId}, commentId: ${commentId}`); // 디버깅용 로그
+
+                    if (confirm("삭제하시겠습니까?")) {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: `/api/posts/${postsId}/comments/${commentId}`,
+                            dataType: 'json',
+                            contentType: 'application/json; charset=utf-8',
+                        }).done(() => {
+                            alert('댓글이 삭제되었습니다.');
+                            window.location.reload();
+                        }).fail((error) => {
+                            console.error(error); // 콘솔에 오류 로그 출력
+                            alert(JSON.stringify(error));
+                        });
+                    }
+                }
+
+            </script>
 </body>
 </html>

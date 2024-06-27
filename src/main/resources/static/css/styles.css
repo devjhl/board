@@ -61,3 +61,30 @@ footer {
 footer .list-unstyled a:hover {
     text-decoration: underline;
 }
+
+/* 일반 스타일 */
+body {
+    background-color: #f8f9fa; /* 배경색 설정 */
+}
+
+.container {
+    margin-top: 30px; /* 상단에 여백 추가 */
+}
+
+.btn-back {
+    margin-bottom: 20px; /* 하단에 여백 추가 */
+}
+
+/* 댓글 영역 스타일 */
+.card {
+    margin-bottom: 20px; /* 카드 하단에 여백 추가 */
+}
+
+.card-header {
+    background-color: #007bff; /* 헤더 배경색 설정 */
+    color: white; /* 헤더 글자색 설정 */
+}
+
+.card-body {
+    padding: 15px; /* 바디 패딩 설정 */
+}

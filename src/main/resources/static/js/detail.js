@@ -114,41 +114,39 @@ $(document).ready(function(){
         const data = {
             id: form.querySelector('#id').value,
             postsId: form.querySelector('#postsId').value,
-            comment: form.querySelector('#comment-content').value,
-        }
+            comment: form.querySelector('#comment-content').value.trim(),
+        };
 
-        if (!data.comment || data.comment.trim() === "") {
+        if (!data.comment) {
             alert("공백 또는 입력하지 않은 부분이 있습니다.");
             return false;
         }
 
-        const con_check = confirm("수정하시겠습니까?");
-        if (con_check === true) {
+        if (confirm("수정하시겠습니까?")) {
             $.ajax({
                 type: 'PUT',
-                url: '/api/posts/' + data.postsId + '/comments/' + data.id,
-                dataType: 'JSON',
+                url: `/api/posts/${data.postsId}/comments/${data.id}`,
+                dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(data)
-            }).done(function () {
+                data: JSON.stringify(data),
+            }).done(() => {
                 window.location.reload();
-            }).fail(function (error) {
+            }).fail((error) => {
                 alert(JSON.stringify(error));
             });
         }
     }
 
     function commentDelete(postsId, commentId) {
-        const con_check = confirm("삭제하시겠습니까?");
-        if (con_check === true) {
+        if (confirm("삭제하시겠습니까?")) {
             $.ajax({
                 type: 'DELETE',
-                url: '/api/posts/' + postsId + '/comments/' + commentId,
-                dataType: 'JSON',
-            }).done(function () {
+                url: `/api/posts/${postsId}/comments/${commentId}`,
+                dataType: 'json',
+            }).done(() => {
                 alert('댓글이 삭제되었습니다.');
                 window.location.reload();
-            }).fail(function (error) {
+            }).fail((error) => {
                 alert(JSON.stringify(error));
             });
         }

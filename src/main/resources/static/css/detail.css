@@ -57,3 +57,63 @@ footer {
     padding: 10px 0;
     margin-top: auto;
 }
+
+/* 댓글 수정 및 삭제 버튼 스타일 */
+.bi-pencil-square,
+.bi-x-square {
+    cursor: pointer; /* 포인터 커서로 변경하여 클릭 가능함을 나타냄 */
+    margin-left: 10px; /* 버튼 간의 간격 추가 */
+}
+
+.btn-outline-primary {
+    margin-top: 10px; /* 상단에 여백 추가 */
+}
+
+/* 댓글 수정 폼 스타일 */
+.form-group {
+    margin-bottom: 15px; /* 하단에 여백 추가 */
+}
+
+/* Collapse 관련 스타일 */
+.collapse.show {
+    display: block !important; /* collapse 요소가 보이도록 강제 설정 */
+}
+
+.list-group-item {
+    padding: 20px 15px; /* 댓글 항목의 패딩 설정 */
+    border-bottom: 1px solid #ddd; /* 댓글 항목 간의 구분선 추가 */
+}
+
+/* 댓글 작성 폼 스타일 */
+.card-body textarea {
+    resize: none; /* 텍스트 영역 크기 조정 불가 */
+}
+
+.card-footer .btn-outline-primary {
+    width: 100%; /* 버튼이 카드 푸터의 전체 너비를 차지하도록 설정 */
+}
+.bi-pencil-square,
+.bi-x-square {
+    cursor: pointer; /* 포인터 커서로 변경하여 클릭 가능함을 나타냄 */
+    margin-left: 10px; /* 버튼 간의 간격 추가 */
+}
+
+.btn-outline-primary {
+    margin-top: 10px; /* 상단에 여백 추가 */
+}
+
+btn-light {
+    cursor: pointer; /* 포인터 커서로 변경하여 클릭 가능함을 나타냄 */
+    margin-left: 10px; /* 버튼 간의 간격 추가 */
+    background-color: transparent; /* 배경색을 투명하게 설정 */
+    border: none; /* 테두리 제거 */
+    font-size: 1.2em; /* 아이콘 크기 조절 */
+}
+
+.btn-outline-primary {
+    margin-top: 10px; /* 상단에 여백 추가 */
+}
+
+.bi-pencil, .bi-x {
+    font-size: 1.2em; /* 아이콘 크기 조절 */
+}

@@ -18,3 +18,22 @@
 .btn-submit {
     margin-top: 20px;
 }
+/* 게시판 관련 스타일 */
+.post-title-box {
+    margin-bottom: 20px; /* 제목 박스 하단에 여백 추가 */
+}
+
+.post-meta {
+    font-size: 14px; /* 메타 정보의 글꼴 크기 설정 */
+    color: #666; /* 메타 정보의 글꼴 색상 설정 */
+    margin-bottom: 20px; /* 하단에 여백 추가 */
+}
+
+.post-content-box {
+    margin-bottom: 30px; /* 내용 박스 하단에 여백 추가 */
+    line-height: 1.6; /* 줄 간격 설정 */
+}
+
+.button-container .btn {
+    margin-right: 10px; /* 버튼 간의 간격 추가 */
+}
