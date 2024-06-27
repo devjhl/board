@@ -33,6 +33,6 @@ public class UserService {
 
     //유저 수정
     public void modify(UserRequestDto dto) {
-        User user = userRepository.findById(dto.toEntity().getId()).o
+        User user = userRepository.findById(dto.toEntity().getId());
     }
 }

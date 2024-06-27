@@ -1,0 +1,20 @@
+.board-table th, .board-table td {
+    text-align: center;
+}
+.board-table th {
+    background-color: #f8f9fa;
+}
+.pagination {
+    justify-content: center;
+}
+.search-box {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+.container {
+    margin-top: 50px;
+}
+.btn-submit {
+    margin-top: 20px;
+}
