@@ -45,28 +45,33 @@
             <div class="card">
                 <ul class="list-group-flush">
                     <li class="list-group-item" th:each="comment : ${comments}">
-    <span>
-        <span style="font-size: small" th:text="${comment.nickname}">Nickname</span>
-        <span style="font-size: xx-small" th:text="${comment.createdDate}">Date</span>
-    </span>
-                        <!-- 댓글 수정 버튼 -->
-                        <button type="button" th:if="${loggedInUser.username} == ${comment.nickname}" data-toggle="collapse" th:attr="data-target='.multi-collapse-' + ${comment.id}" class="btn btn-light" title="수정">
+                        <span>
+                            <span style="font-size: small" th:text="${comment.nickname}">Nickname</span>
+                            <span style="font-size: xx-small" th:text="${comment.createdDate}">Date</span>
+                        </span>
+                        <th:if="${loggedInUser.username} == ${comment.nickname}">
+                        <button type="button" th:if="${loggedInUser.username} == ${comment.nickname}" class="btn btn-light" title="수정" onclick="editComment(this)">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        <!-- 댓글 삭제 버튼 -->
                         <button type="button" th:if="${loggedInUser.username} == ${comment.nickname}" class="btn btn-light" title="삭제" onclick="commentDelete(this)">
                             <i class="bi bi-x"></i>
                         </button>
-                        <p th:text="${comment.comment}" class="collapse multi-collapse-[[${comment.id}]] show">Comment Text</p>
-                        <!-- 댓글 수정 폼 -->
-                        <form class="collapse multi-collapse-[[${comment.id}]]" onsubmit="return false;">
+                        </th:if>
+                        <div class="comment-content" th:text="${comment.comment}"></div>
+                        <form class="comment-edit-form d-none" onsubmit="return false;">
                             <input type="hidden" name="id" th:value="${comment.id}">
                             <input type="hidden" name="postsId" th:value="${board.id}">
                             <div class="form-group">
-                                <textarea class="form-control" id="comment-content" rows="3" th:text="${comment.comment}"></textarea>
+                                <textarea class="form-control" name="comment" rows="3" th:text="${comment.comment}"></textarea>
                             </div>
+                            <button type="button" class="btn btn-outline-primary" onclick="commentUpdate(this)">저장</button>
                         </form>
                     </li>
+
+
+
+
+
 
                 </ul>
             </div>
@@ -99,13 +104,34 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
             <script type="text/javascript" src="/js/detail.js"></script>
             <script>
+                function editComment(button) {
+                    const listItem = button.closest('.list-group-item');
+                    const commentContent = listItem.querySelector('.comment-content');
+                    const editForm = listItem.querySelector('.comment-edit-form');
+
+                    if (editForm.classList.contains('d-none')) {
+                        commentContent.classList.add('d-none');
+                        editForm.classList.remove('d-none');
+                    } else {
+                        commentContent.classList.remove('d-none');
+                        editForm.classList.add('d-none');
+                    }
+                }
+
                 function commentUpdate(button) {
-                    const form = button.closest('form'); // 버튼의 부모 폼 요소를 찾음
+                    const form = button.closest('form');
+                    if (!form) {
+                        console.error('Form not found');
+                        return;
+                    }
+
                     const data = {
-                        id: form.querySelector('#id').value,
-                        postsId: form.querySelector('#postsId').value,
-                        comment: form.querySelector('#comment-content').value.trim(),
+                        id: form.querySelector('input[name="id"]').value,
+                        postsId: form.querySelector('input[name="postsId"]').value,
+                        comment: form.querySelector('textarea[name="comment"]').value.trim(),
                     };
+
+                    console.log(`commentUpdate called with data: ${JSON.stringify(data)}`); // 디버깅용 로그
 
                     if (!data.comment) {
                         alert("공백 또는 입력하지 않은 부분이 있습니다.");
@@ -120,15 +146,16 @@
                             contentType: 'application/json; charset=utf-8',
                             data: JSON.stringify(data),
                         }).done(() => {
+                            alert('댓글이 수정되었습니다.');
                             window.location.reload();
                         }).fail((error) => {
-                            alert(JSON.stringify(error));
+                            console.error(error);
+                            alert("댓글 수정 중 오류가 발생했습니다.");
                         });
                     }
                 }
 
                 function commentDelete(button) {
-                    // 버튼의 부모 폼 요소를 찾습니다.
                     const form = button.closest('.list-group-item');
                     const postsId = form.querySelector('input[name="postsId"]').value;
                     const commentId = form.querySelector('input[name="id"]').value;
