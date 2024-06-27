@@ -1,5 +1,6 @@
 package com.board.board.controller.board;
 
+import com.board.board.config.GlobalControllerAdvice;
 import com.board.board.controller.user.MyController;
 import com.board.board.dto.BoardResponseDto;
 import com.board.board.dto.CommentResponseDto;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -81,11 +83,10 @@ public class BoardController {
     }
 
     @PostMapping("/write")
-    public String createBoard(Board board,  Model model) {
-        MyController myController = new MyController(customUserDetailsService);
-        org.springframework.security.core.userdetails.User loginUser = myController.addUserToModel(model);
-        User userByUsername = customUserDetailsService.getUserByUsername(loginUser.getUsername());
-        board.setUser(userByUsername);  // 로그인한 사용자를 게시글 작성자로 설정
+    public String createBoard(Board board,  Model model,@AuthenticationPrincipal UserDetails userDetails) {
+
+        User userByUsername = customUserDetailsService.getUserByUsername(userDetails.getUsername());
+        board.setUser(userByUsername);
         boardService.createBoard(board);
 
         return "redirect:/boards";

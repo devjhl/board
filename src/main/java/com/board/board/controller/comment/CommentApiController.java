@@ -8,6 +8,8 @@ import com.board.board.service.CommentService;
 import com.board.board.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
@@ -20,11 +22,8 @@ public class CommentApiController {
     private final CustomUserDetailsService customUserDetailsService;
 
     @PostMapping("/posts/{id}/comments")
-    public ResponseEntity<?> commentSave(@PathVariable Long id, @RequestBody CommentRequestDto dto, Model model) {
-        // 로그인 정보
-        MyController myController = new MyController(customUserDetailsService);
-        org.springframework.security.core.userdetails.User loginUser = myController.addUserToModel(model);
-        User user = customUserDetailsService.getUserByUsername(loginUser.getUsername());
+    public ResponseEntity<?> commentSave(@PathVariable Long id, @RequestBody CommentRequestDto dto, Model model,@AuthenticationPrincipal UserDetails userDetails) {
+        User user = customUserDetailsService.getUserByUsername(userDetails.getUsername());
 
         commentService.commentSave(user.getNickname(), id, dto);
 
