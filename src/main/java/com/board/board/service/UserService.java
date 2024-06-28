@@ -5,6 +5,7 @@ import com.board.board.dto.SignupUserDto;
 import com.board.board.dto.UserRequestDto;
 import com.board.board.repository.UserRepository;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,22 +16,27 @@ import org.springframework.validation.FieldError;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
+@RequiredArgsConstructor
 @Service
 public class UserService {
-    @Autowired
+
     private final UserRepository userRepository;
-    @Autowired
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    @Transactional
+    public void save(SignupUserDto userDto) {
+        User user = new User();
+        user.setUsername(userDto.getUsername());
+        user.setNickname(userDto.getNickname());
+        user.setEmail(userDto.getEmail());
 
-    public User save(@Valid SignupUserDto signupUserDto) {
-        User user = convertToUser(signupUserDto);
-        return userRepository.save(user);
+        if (userDto.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        } else {
+            throw new IllegalArgumentException("Password cannot be null");
+        }
+
+        userRepository.save(user);
     }
 
 

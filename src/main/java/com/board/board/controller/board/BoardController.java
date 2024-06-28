@@ -1,13 +1,11 @@
 package com.board.board.controller.board;
 
-import com.board.board.config.GlobalControllerAdvice;
-import com.board.board.controller.user.MyController;
-import com.board.board.dto.BoardResponseDto;
-import com.board.board.dto.CommentResponseDto;
-import com.board.board.service.CustomUserDetailsService;
 import com.board.board.domain.board.Board;
 import com.board.board.domain.user.User;
+import com.board.board.dto.BoardResponseDto;
+import com.board.board.dto.CommentResponseDto;
 import com.board.board.service.BoardService;
+import com.board.board.service.CustomUserDetailsService;
 import com.board.board.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -39,73 +37,89 @@ public class BoardController {
     public String getBoards(Model model, @AuthenticationPrincipal User user,
                             @RequestParam(defaultValue = "0") int page,
                             @RequestParam(required = false) String keyword) {
-        Pageable pageable = PageRequest.of(page, 10, Sort.by("createDate").descending());
-        Page<Board> boardPage;
+        try {
+            Pageable pageable = PageRequest.of(page, 10, Sort.by("createDate").descending());
+            Page<Board> boardPage;
 
-        if (keyword != null && !keyword.isEmpty()) {
-            boardPage = boardService.searchBoards(keyword, pageable);
-            model.addAttribute("keyword", keyword);
-        } else {
-            boardPage = boardService.getBoards(pageable);
+            if (keyword != null && !keyword.isEmpty()) {
+                boardPage = boardService.searchBoards(keyword, pageable);
+                model.addAttribute("keyword", keyword);
+            } else {
+                boardPage = boardService.getBoards(pageable);
+            }
+
+            model.addAttribute("boardList", boardPage.getContent());
+            model.addAttribute("user", user);
+            model.addAttribute("totalPages", boardPage.getTotalPages());
+            model.addAttribute("currentPage", page);
+            return "board/boards";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error";
         }
-
-        model.addAttribute("boardList", boardPage.getContent());
-        model.addAttribute("user", user);
-        model.addAttribute("totalPages", boardPage.getTotalPages());
-        model.addAttribute("currentPage", page);
-        return "board/boards";
     }
-    //글 상세보기
+
     @GetMapping("/{id}")
     public String getBoard(@PathVariable Long id, Model model) {
-        Optional<Board> board = boardService.getBoard(id);
-        BoardResponseDto dto = boardService.findById(id);
-        List<CommentResponseDto> comments = dto.getComments();
+        try {
+            Optional<Board> board = boardService.getBoard(id);
+            BoardResponseDto dto = boardService.findById(id);
+            List<CommentResponseDto> comments = dto.getComments();
 
-        if (board.isPresent()) {
-            model.addAttribute("board", board.get());
+            if (board.isPresent()) {
+                model.addAttribute("board", board.get());
+            }
+
+            //댓글 관련
+            if (comments != null && !comments.isEmpty()) {
+                model.addAttribute("comments", comments);
+            }
+
+            return "board/detail";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error";
         }
-
-        //댓글 관련
-        if(comments != null && !comments.isEmpty()) {
-            model.addAttribute("comments", comments);
-        }
-
-
-        return "board/detail";
     }
 
-
-
     @GetMapping("/write")
-    public String showWritePage(Model model ) {
+    public String showWritePage(Model model) {
         return "board/write";
     }
 
     @PostMapping("/write")
-    public String createBoard(Board board,  Model model,@AuthenticationPrincipal UserDetails userDetails) {
-
-        User userByUsername = customUserDetailsService.getUserByUsername(userDetails.getUsername());
-        board.setUser(userByUsername);
-        boardService.createBoard(board);
-
-        return "redirect:/boards";
+    public String createBoard(Board board, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            User userByUsername = customUserDetailsService.getUserByUsername(userDetails.getUsername());
+            board.setUser(userByUsername);
+            boardService.createBoard(board);
+            return "redirect:/boards";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error";
+        }
     }
-
-
 
     @PutMapping("/{id}")
     @ResponseBody
     public ResponseEntity<Board> updateBoard(@PathVariable Long id, @RequestBody Board board, HttpServletResponse response) throws IOException {
-        response.sendRedirect("boards");
-        boardService.updateBoard(id, board);
-        return ResponseEntity.ok(board);
+        try {
+            response.sendRedirect("boards");
+            boardService.updateBoard(id, board);
+            return ResponseEntity.ok(board);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     @DeleteMapping("/{id}")
     @ResponseBody
     public ResponseEntity<Void> deleteBoard(@PathVariable Long id) {
-        boardService.deleteBoard(id);
-        return ResponseEntity.noContent().build();
+        try {
+            boardService.deleteBoard(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
     }
 }
