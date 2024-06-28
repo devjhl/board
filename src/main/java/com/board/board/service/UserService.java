@@ -33,6 +33,16 @@ public class UserService {
 
     //유저 수정
     public void modify(UserRequestDto dto) {
-        User user = userRepository.findById(dto.toEntity().getId());
+        //
+        Optional<User> optionalUser = Optional.ofNullable(userRepository.findById(dto.getId()));
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setNickname(dto.getNickname());
+            user.setPassword(dto.getPassword());
+            user.setEmail(dto.getEmail());
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("유저를 찾을 수 없습니다.");
+        }
     }
 }

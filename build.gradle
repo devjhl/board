@@ -33,6 +33,8 @@ dependencies {
 	implementation 'jakarta.servlet:jakarta.servlet-api:4.0.4'
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:2.0.0'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:2.0.0'
+	compileOnly 'org.projectlombok:lombok:1.18.22'
+	annotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
 
 tasks.named('test') {
