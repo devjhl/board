@@ -33,12 +33,13 @@ public class UserService {
 
     //유저 수정
     public void modify(UserRequestDto dto) {
-        //
         Optional<User> optionalUser = Optional.ofNullable(userRepository.findById(dto.getId()));
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             user.setNickname(dto.getNickname());
-            user.setPassword(dto.getPassword());
+            if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(dto.getPassword()));
+            }
             user.setEmail(dto.getEmail());
             userRepository.save(user);
         } else {

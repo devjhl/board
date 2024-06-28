@@ -78,7 +78,7 @@
             contentType : "application/json",
             data: JSON.stringify(userData),
             success: function (response) {
-                console.log("회원정보 수정 성공",response);
+                alert("회원정보를 수정하였습니다.");
                 window.location.href = '/my'; // 회원 정보 수정 페이지로 이동
             },
             error: function (xhr, status, error) {
