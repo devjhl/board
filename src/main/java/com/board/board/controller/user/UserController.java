@@ -2,13 +2,18 @@ package com.board.board.controller.user;
 
 import com.board.board.domain.user.Role;
 import com.board.board.domain.user.User;
+import com.board.board.dto.SignupUserDto;
 import com.board.board.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Map;
 
 
 @Controller
@@ -21,21 +26,13 @@ public class UserController {
         this.userService = userService;
     }
     @PostMapping("/signup")
-    public String signup(@RequestParam String username,
-                                         @RequestParam String nickname,
-                                         @RequestParam String password,
-                                         @RequestParam String email,
-                                         @RequestParam(required = false, defaultValue = "USER") String role,
-                                         HttpServletResponse response) throws IOException {
-        User user = User.builder()
-                .username(username)
-                .nickname(nickname)
-                .password(password)
-                .email(email)
-                .role(Role.valueOf(role))
-                .build();
-
-        userService.save(user);
+    public String signup(@Valid @ModelAttribute("userDto") SignupUserDto userDto, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            // 유효성 검사 실패시 입력 데이터 값을 유지하고, 오류 메시지를 모델에 추가
+            model.addAttribute("userDto", userDto);
+            return "user/signup";
+        }
+        userService.save(userDto);
         return "redirect:/users";
     }
 
